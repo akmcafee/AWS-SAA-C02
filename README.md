@@ -106,5 +106,31 @@ e.g. X as a Service
     - lists can be made up of dictionaries, each having keys and key:value pairs
 
 #### JSON101 - Javascript Object Notation
+- Where YAML is generally only used for CloudFormation. JSON is used for CloudFormation and other things such as policy documents in AWS for permissions.
+- JSON doesn't care about spacing, positioning, and indentation because everything is enclosed in something, e.g. braces, brackets, or quotations
+    - because of this, it appears less readable
+- Objects in JSON are unordered collections of key:value pairs enclosed in `{ }`
+- Lists in JSON are ordered arrays separated by commas and enclosed in `[ ]`
+- Values can be strings, objects, numbers, arrays, boolean, and null
+- JSON objects can contain lists of other JSON objects
 
- 
+> Try to insert image of the OSI model here.
+
+#### Network Starter Pack - 1 - Physical
+- defines the transmission and reception of raw data streams between a device and a shared physical medium. It defines 
+things like voltage levels, timing, rates, distances, modulation, and connectors.
+- physical medium is copper, fiber, WiFi
+- voltage fluctuations determine binary output to be shared between devices
+    - e.g. Binary 1 = +1 volt, Binary 0 = -1 volt
+- HUBS
+    - Anything received on one port is sent to **all** other ports, including errors and collisions.
+    - Transmissions cannot be directed to a specific device. It's broadcasted to, and processed by, every device on the network.
+    - If multiple devices transmit at once, a collision occurs, rendering all the data useless. 
+    - L1 has no media access control and no collision detection
+
+#### Network Starter Pack - 2 - Data Link - Part 1
+- Frames are a format for sending information over a layer 2 network. 
+    - Frames can be addressed to a destination or broadcast (ALL F's)
+    - Preamble (56 bits, SFD is 8 bits), Destination MAC, Source MAC, EtherType (16 bits), Payload (46-1500 bytes), Frame Check Sequence (FCS, 32 bits)
+    > Try to insert image of the breakdown of a Data Link frame
+- Devices at L2 have a unique MAC address. 48 bits, in hex. 24 bits for the manufacturer (O.U.I.) and 24 bits for the specific NIC hardware.
