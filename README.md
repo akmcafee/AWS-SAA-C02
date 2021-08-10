@@ -40,7 +40,8 @@ keys, using one at a time.
 ## Cloud Computing Fundamentals
 #### What is cloud computing? 
 Taken from NIST Special Publication 800-145.
-1. On-Demand Self-Service - Able to provision service capabilities without human interaction. "Provision and Terminate using a UI/CLI 
+1. On-Demand Self-Service - Able to provision service capabilities without human interaction. "Provision and Terminate 
+using a UI/CLI 
 without human interaction." (acantrill)
 2. Broad Network Access - Service capabilities are available over the network through typical connection methods. "Access 
 services over any networks, on any devices, using standard protocols and connections." (acantrill)
@@ -48,10 +49,12 @@ services over any networks, on any devices, using standard protocols and connect
 and knowledge of resource locations. "Economies of scale. Cheaper service." (acantrill)
 4. Rapid Elasticity - Service capabilities allow resources to rapidly scale up or down with demand and appear to be unlimited.
 "Scale UP and DOWN automatically in response to system load." (acantrill)
-5. Measured Service - Service can be monitored, controlled, and reported on for billing. "Usage is measured. Pay for what you consume." 
+5. Measured Service - Service can be monitored, controlled, and reported on for billing. "Usage is measured. Pay for what 
+you consume." 
 (acantrill)
 
-In the SAA-C02 exam, questions are often less about the product in an answer and more about how the architecture, the answer uses, makes sense.
+In the SAA-C02 exam, questions are often less about the product in an answer and more about how the architecture, the 
+answer uses, makes sense.
 
 #### Public vs Private vs Multi vs Hybrid
 - Public Cloud
@@ -72,7 +75,8 @@ In the SAA-C02 exam, questions are often less about the product in an answer and
     - Using a combination of public and private clouds.
     - e.g. A company uses AWS for most of their services but depends on AWS Outposts for a specific portion of their product 
     or service.
-    - The term can be confused with using public cloud in combination with on-prem infrastructure. These are not the same thing.
+    - The term can be confused with using public cloud in combination with on-prem infrastructure. These are not the same 
+    thing.
         - acantrill will use the terms Hybrid Environment and/or Hybrid Networking when referring to public clouds that are
         connected to local, typically private, on-prem infrastructure. 
     -Hybrid Cloud is **not** connecting a public cloud to a legacy on-prem environment. 
@@ -81,7 +85,8 @@ In the SAA-C02 exam, questions are often less about the product in an answer and
 e.g. X as a Service
 - On-premises: Owner pays for everything, including equipment, facilities, and IT support teams.
 - DC Hosted: Renting rack space in a facility to place your own equipment. Facility pays for electricity, security, HVAC, etc.
-- IaaS (Infrastructure as a Service): Paying to rent a VM (virtual machine) in a data center. Typically charged by the second, minute, or hour of usage.
+- IaaS (Infrastructure as a Service): Paying to rent a VM (virtual machine) in a data center. Typically charged by the 
+second, minute, or hour of usage.
     - Some restrictions of the resources and capabilities by the provider. 
     - EC2 uses the IaaS service model.   
     - Unit of consumption is the O/S layer.
@@ -106,8 +111,10 @@ e.g. X as a Service
     - lists can be made up of dictionaries, each having keys and key:value pairs
 
 #### JSON101 - Javascript Object Notation
-- Where YAML is generally only used for CloudFormation. JSON is used for CloudFormation and other things such as policy documents in AWS for permissions.
-- JSON doesn't care about spacing, positioning, and indentation because everything is enclosed in something, e.g. braces, brackets, or quotations
+- Where YAML is generally only used for CloudFormation. JSON is used for CloudFormation and other things such as policy 
+documents in AWS for permissions.
+- JSON doesn't care about spacing, positioning, and indentation because everything is enclosed in something, e.g. braces, 
+brackets, or quotations
     - because of this, it appears less readable
 - Objects in JSON are unordered collections of key:value pairs enclosed in `{ }`
 - Lists in JSON are ordered arrays separated by commas and enclosed in `[ ]`
@@ -124,13 +131,80 @@ things like voltage levels, timing, rates, distances, modulation, and connectors
     - e.g. Binary 1 = +1 volt, Binary 0 = -1 volt
 - HUBS
     - Anything received on one port is sent to **all** other ports, including errors and collisions.
-    - Transmissions cannot be directed to a specific device. It's broadcasted to, and processed by, every device on the network.
+    - Transmissions cannot be directed to a specific device. It's broadcasted to, and processed by, every device on the 
+    network.
     - If multiple devices transmit at once, a collision occurs, rendering all the data useless. 
     - L1 has no media access control and no collision detection
 
 #### Network Starter Pack - 2 - Data Link - Part 1
 - Frames are a format for sending information over a layer 2 network. 
     - Frames can be addressed to a destination or broadcast (ALL F's)
-    - Preamble (56 bits, SFD is 8 bits), Destination MAC, Source MAC, EtherType (16 bits), Payload (46-1500 bytes), Frame Check Sequence (FCS, 32 bits)
+    - Preamble (56 bits, SFD is 8 bits), Destination MAC, Source MAC, EtherType (16 bits), Payload (46-1500 bytes), 
+    Frame Check Sequence (FCS, 32 bits)
     > Try to insert image of the breakdown of a Data Link frame
-- Devices at L2 have a unique MAC address. 48 bits, in hex. 24 bits for the manufacturer (O.U.I.) and 24 bits for the specific NIC hardware.
+- Devices at L2 have a unique MAC address. 48 bits, in hex. 24 bits for the manufacturer (O.U.I.) and 24 bits for the 
+specific NIC hardware.
+
+#### Network Starter Pack - 2 - Data Link - Part 2
+- Device 1, using L2, checks L1 for carrier presence before attempting to send a frame to device 2, by MAC address. If 
+carrier is present, meaning another device is already transmitting on the L1 physical medium, device 1 waits for the 
+transmission to complete. 
+If no carrier is present, device 1 begins transmission. 
+- The data being transmitted is encapsulated inside a frame. 
+    - As a data packet is being built, working it's way down through the OSI model from L7 to L1, each layer adds it's portion
+    to the encapsulated frame. The device receiving the transmission must de-encapsulate the frame to process each segment. 
+- Collisions can still happen with L2. 
+    - If a collision occurs, both devices stop and wait for a random amount of time before trying again. This is called 
+    Collision Detection.
+        - CSMA/CD (carrier sense multiple access / collision detection)
+    - On HUBs, one collision affects all devices on the network.
+- Switches store and forward frames to the device with the specific destination MAC address in the frame.
+    - Switches keep a table of device MAC addresses to assoicate with each switch port.
+    - Collisions are contained to the port. They are not forwarded to other devices. Every other device does not have to 
+    process them.
+    
+#### Decimal to Binary Conversion (IP Addressing) 
+- 32 bits 
+- 4 x 8 bits
+- 4 x Bytes
+- 4 x Octets
+- Make a table with 3 rows:
+	- Row 1: each column is numbered 1 through 8 representing each bit in the octet
+	- Row 2: contains the values for each bit in each bit from left to right. 128, 64, 32, 16, 8, 4, 2, 1
+	- Row 3: left blank for you to write either 1 or 0 as you're adding up (or subtracting from) the octect value
+- Method to use for Decimal to Binary: 
+	- Move through the binary table, left to right. 
+	1. Compare decimal number to Binary position value, if smaller write 0 => move on to next table position, go to #1
+	2. IF IT IS EQUAL OR LARGER - Minus the binary position value from your decimal number, add 1 in the binary value column
+	3. Move on to next position, go to #1 (with the new decimal value)
+
+#### Network Starter Pack - 3 - Part 1
+Layer 3 - Network
+- Layer 3 connects layer 2 networks together and moves data between them. 
+	- At one location with directly cabled/wired connections, ethernet is typically the best protocol to use. Across 
+	geographically spaced layer 2 networks that ARE directly connected by fiber, cable, wireless bridge, etc., layer 3 
+	will typically use suitable protocols such as PPP, MPLS, or ATM. 
+	- When data needs to traverse geographically spaced layer 2 networks that are NOT directly connected by fiber or cable, 
+	layer 3 will typically use another protocol such as Internet Protocol (IP)
+	- Routers will encapsulate a packet inside an ethernet frame for it's journey over a local network. When that packet 
+	needs to move over a different network, on it's way to its final destination, the router will remove the packet from 
+	that frame and re-encapsulate it in a new frame for the next network.
+- IPv6 has bigger, than IPv4, Source and Destination IP address fields for larger addresses.
+- TTL in IPv4 is called Hop Limit in IPv6.
+
+#### Network Starter Pack - 3 - Part 2
+IPv4 - IP Addressing
+- 133.33.3.7 is called Dotted-decimal Notation; 4 x 0-255
+- First 2 octets are the "network" part and the last 2 octets are the "host" part
+- An IPv4 address is made up of 32 bits (4 bytes) - 4 x 8 bits (Octets)
+
+Subnet masks
+- 255.255.0.0 is the same as /16 prefix
+- Binary for 255 is 11111111
+- Therefore, 255.255.0.0 in binary is 11111111.11111111.00000000.00000000
+	- 255.255.255.255 in binary would be 11111111.11111111.11111111.11111111
+
+Routing tables and Routes
+- /24 subnet mask means the first 24 bits of the IP address are for the network and the last 8 bits are for the host
+- Border Gateway Protocol (BGP) allows routers to communicate with each other to exchange information containing which 
+networks they know about.
