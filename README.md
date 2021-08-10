@@ -208,3 +208,17 @@ Routing tables and Routes
 - /24 subnet mask means the first 24 bits of the IP address are for the network and the last 8 bits are for the host
 - Border Gateway Protocol (BGP) allows routers to communicate with each other to exchange information containing which 
 networks they know about.
+- A packet traveling across networks is directed to the proper NETWORK based on information in the routing table. It 
+gets directed to the proper HOST based on the MAC address listed in the packet by using Address Resolution Protocol (ARP).
+
+#### Network Starter Pack - 3 - Part 3
+Address Resolution Protocol (ARP)
+- ARP finds the MAC address for any given IP address.
+- ARP is used when you have a L3 packet that you want to encapsulate in a frame and send to a MAC address. You don't know 
+the MAC address and you need a protocol that can find the MAC address for an IP address. 
+- ARP broadcasts on layer 2. It ask's all devices on the network, "Who has IP address xxx.xxx.xxx.xxx?"
+
+IP Routing
+- When a device sends data through the network, it encapsulates the packet containing data into a frame. Each hop removes 
+the frame to inspect the packet destination IP and MAC address, then reencapsulates the packet in a new frame and sends 
+it on it's way to the next hop, using ARP to find the next MAC address along the way.
