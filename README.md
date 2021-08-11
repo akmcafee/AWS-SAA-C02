@@ -191,6 +191,9 @@ Layer 3 - Network
 	that frame and re-encapsulate it in a new frame for the next network.
 - IPv6 has bigger, than IPv4, Source and Destination IP address fields for larger addresses.
 - TTL in IPv4 is called Hop Limit in IPv6.
+- L3 does not provide any method for channels of communications for the receiving device to distinguish which application 
+on the operating system the packet data belongs. Source IP to Destination IP only. 
+- L3 has no flow control. 
 
 #### Network Starter Pack - 3 - Part 2
 IPv4 - IP Addressing
@@ -219,6 +222,143 @@ the MAC address and you need a protocol that can find the MAC address for an IP 
 - ARP broadcasts on layer 2. It ask's all devices on the network, "Who has IP address xxx.xxx.xxx.xxx?"
 
 IP Routing
-- When a device sends data through the network, it encapsulates the packet containing data into a frame. Each hop removes 
+- When a device sends data through the network, it encapsulates the packet containing data into a frame on layer 2. Each hop removes 
 the frame to inspect the packet destination IP and MAC address, then reencapsulates the packet in a new frame and sends 
 it on it's way to the next hop, using ARP to find the next MAC address along the way.
+- Packets can be delivered out of order.
+    - When packets travel across the internet, they may take different routes to reach the destination. Because some routes 
+    will be slower than others, some packets may take longer than others sent after them. Layer 4 assists in sorting this out. 
+    
+#### Network Starter Pack - 4 - Transport - Part 1
+#### *and maybe layer 5
+Problems with Layer 3
+- L3 provides to ordering mechanism for packets.
+- No communication channels. Source to Destination IP address only. No method of splitting packet data by application or 
+channel.
+- No flow control. If the source sends packets faster than the destination can receive and process them, saturation occurs
+causing packet loss.
+
+Layer 4 - TCP and UDP
+- Transmission Control Protocol (TCP)
+    - slower but reliable
+    - HTTP, HTTPS, SSH, etc.
+    - connection oriented protocol. Establishing a connection between two devices it creates a bi-directions channel of 
+    communication.
+- User Datagram Protocol (UDP)
+    - faster but less reliable
+- TCP and UDP, both, run on top of IP, using IP as transit.
+- TCP is used for most of the important upper-layer protocols
+
+TCP Segments
+- Just another container like packets and frames but are specific to TCP.
+- TCP segments are encapsulated inside IP packets. 
+    - Because they're inside a packet that's already inside a frame, TCP segments don't contain source or destination IP 
+    addresses but they do contain source and destination PORT info.
+- Sequence number defines the order of the packets.
+- Acknowledgement confirms receipt of all sequenced packets.
+- Flags (9 bits) are used to control the TCP segments and various parts of the wider connection. e.g. close the connection, 
+synchronize sequence numbers, etc. 
+- TCP Window is the number of bytes you're willing to receive between acknowledgements. 
+    - This is how flow control is implemented. It lets the receiver control the rate of data being sent by the sender.
+- Checksum is used for error checking so retransmissions can be requested.
+- Urgent Pointer allows coordination of the data transfer between the client and server. 
+    - Useful for latency sensitive applications like telnet or FTP. 
+    
+#### Network Starter Pack - 4 - Transport - Part 2
+- Ephemeral port is a temporary port on the client device used as a source port to send data to the server. 
+    - Ephemeral ports tend to be a higher number range. e.g. 23060
+- TCP Connection 3 way Handshake
+    - It's important that the client and server both agree on a sequence so data transmission occurs as smoothly and reliably
+    as possible.
+    - The sequence number they both agree on is how they acknowledge receipt of data send from the other device.
+    - The client will send an initial sequence number "CS" and the server will respond with it's own
+    sequence start number "SS" plus 1. The client will acknowledge the server's starting sequence by returning
+    that response with the next number in the server's sequence number.
+
+Network ACL (AWS)
+- Stateless firewalls see two transmissions: 
+1. Outbound from client to server (e.g. tcp/23060 to tcp/443)
+2. Response from server to client (e.g. tcp/443 to tcp/23060)
+- Stateful firewalls see 1 thing
+1. Outbound from client to server (e.g. tcp/23060 to tcp/443) and allowing the outbound response 
+implicitly allows the inbound response. 
+- This is how security rules work in AWS.
+- This is technically a combination of layers 4 and 5. 
+
+#### Network Starter Pack - EXTRA - NAT - Part 1
+Network Address Translation (NAT) is the process of adjusting packets source and destination addresses to allow transit 
+across different networks. The main types you will encounter are Static NAT, Dynamic NAT and Port Address Translation (PAT). 
+NAT is most commonly experience in home or office networks where private IPv4 addresses are translated to a single public 
+address, allowing outgoing internet access. 
+- NAT designed to overcome IPv4 shortcomings. 
+- Translates private IPv4 addresses to public addresses. 
+- Provides some security benefits.
+- Static NAT is 1 private IP to 1 public (fixed) IP address (IGW)
+- Dynamic NAT is 1 private IP to 1st available public IP from a designated pool
+- Port Address Translation (PAT) is many private addresses to one public address (NATGW)
+    - This is the method the NAT gateway instances use in AWS
+- NAT is for IPv4 only. IPv6 has plenty of addresses. 
+
+Static NAT
+- The router (NAT device) stores a NAT table, mapping private IP to public IP (1:1)
+- As packets flow out from internal devices with private IP addresses through the device performing the NAT, the source 
+IP of the packets are translated to a public IP address of the NAT device's network. This is done so that the receiving 
+server across the internet has a valid public IP address of the source network and knows where to return it's response. 
+- This is how the AWS Internet Gateway works.
+
+Dynamic NAT
+- Similar to Static NAT, except devices are not allocated a permanent public IP address. Instead, they're allocated a 
+temporary public IP address from a pool of public IP addresses. 
+- Dynamic NAT is used when you have fewer public IP addresses available than you have private devices and all private devices 
+require bi-directional communication.     
+- Public IP addresses can be shared by multiple private devices only if there's no overlap, meaning the private devices are 
+communicating with different public internet servers. 
+- If the public IP address pool you own is exhausted, other private devices on your network will fail to access the internet. 
+
+Port Address Translation (PAT)
+- Common with home routers
+- In AWS, this is how the NATGateway (NATGW) functions. Many private IP's to 1 public IP (MANY:1) architecture.
+- Private devices determines the source port, which must be unique among all other private network devices. 
+- With PAT, you can't initiate traffic inbound to a private device because the NAT table won't know which private device 
+to send the packets to. 
+
+#### Network Starter Pack - Subnetting - Part 1
+IPv4 Addressing and Subnetting
+- 0.0.0.0 - 255.255.255.255 = 4,294,967,296 addresses
+    - less than 1 address per person on the planet and many/most people have more than one device
+- Originally managed by IANA but now managed by regional authorities
+- All IPv4 addresses are "allocated". So, you can't just pick your own public IP address and expect it to work properly.
+- Part of the address space is private and can be used freely for LANs.
+
+IPv4 Address Space
+- Class A
+    - 0.0.0.0 - 127.255.255.255
+    - 128 networks
+    - 16,777,216 IPs each
+    - Huge, early internet businesses and military
+- Class B 
+    - 128.0.0.0 - 191.255.255.255
+    - 16,384 networks
+    - 65,536 IPs each
+- Class C
+    - 192.0.0.0 - 223.255.255.255
+    - 2,097, 152 networks
+    - 256 IPs each (starts counting at the last octet)
+
+Private IP addresses 
+- are defined in standard RFC1918
+- all are generally broken up into smaller networks
+- you want to use the same one multiple times
+- 10.0.0.0 - 10.255.255.255 (1 x class A network)
+    - 16,777,216 IPv4 addresses
+- 172.16.0.0 - 172.31.255.255 (16 x class B networks)
+    - 16 x 65,536 IPv4 addresses
+- 192.168.0.0 - 192.168.255.255 ( 256 x class C networks)
+    - 256 x 256 IPv4 addresses
+
+IPv4/6 Address Space
+- There are 4,294,967,296 IPv4 addresses but there are 340,282,366,920,938,463,463,374,607,431,770,000,000 IPv6 addresses. 
+    - 50 Octillion per living human! 79,228,163,000,000,000,000,000,000,000 IPv4 Internets! 670 Quadrillion addresses 
+    per square millimeter of earth!
+    
+IP Subnetting
