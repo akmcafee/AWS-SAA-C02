@@ -362,3 +362,7 @@ IPv4/6 Address Space
     per square millimeter of earth!
     
 IP Subnetting
+- /## is called the prefix. e.g. 10.16.0.0/16
+- Classless Inter-Domain Routing (CIDR) is what allows us to take networks and break them down.
+- 10.16.0.0/8 would be a bigger network. The smaller the prefix, the larger the network space.
+- Breaking 1 subnet into two smaller subnets is typical. Using odd numbers is not as common but will provide you with 3 smaller subnets.
