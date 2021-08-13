@@ -396,7 +396,14 @@ IP Subnetting
 - See screenshot of process 
 [insert screenshot here for SSL and TLS]
 
-TLS 
-1. Cipher Suites - set of protocols used by TLS 
-    - e.g key exchange algorithm, bulk encryption algorithm, and message authentication code (MAC) algorithm
-     
+## AWS Fundamentals
+#### AWS Public vs Private Services
+- By default, there is no permissions access to public or private services. The terms public and private only refer 
+to networking. 
+    - Connectiviy vs Permissions
+- AWS Public is not the same as the public internet. 
+- AWS Private network is secured away from the public internet and AWS Public networks by default. A service that runs 
+inside an AWS private network must explicitly be made available to the AWS Public network, where connections can be made 
+to it from the public internet.  
+[insert screenshot here]
+
