@@ -366,3 +366,37 @@ IP Subnetting
 - Classless Inter-Domain Routing (CIDR) is what allows us to take networks and break them down.
 - 10.16.0.0/8 would be a bigger network. The smaller the prefix, the larger the network space.
 - Breaking 1 subnet into two smaller subnets is typical. Using odd numbers is not as common but will provide you with 3 smaller subnets.
+
+#### Network Starter Pack - Distributed Denial of Service (DDOS)
+- Attacks designed to overload a service
+- Creates competition for resources amongst legitimate connections
+- Distributed means they're difficult to block because the DDOS traffic isn't coming from individual IP address or ranges
+- 3 Categories of attacks
+    - Application layer - HTTP flood
+        - Takes advantage of an inbalance of processing between the client and server. Client requests for a webpage are simple 
+    and easy but the delivery of the webpage by the server is complex. DDOS attacks amplify the number of client requests
+    exponentially causing the server resources to overload while trying to meet demand. 
+    - Protocol attacks - SYN flood
+        - takes advantage of the connection-based nature of requests by spoofing a source IP address when initiating 
+        the 3 way handshake. The server tries to respond, in step 2 of the handshake, but can't because the source IP is 
+        spoofed. The server sits waiting for a response, consuming network resources while it waits. 
+    - Volumetric / Amplification attacks - DNS Amplification
+        - DNS requests are small but responses are more complex. Typically botnet armies will generate a multitude of 
+        independent requests using a spoofed IP of their target webpage or webservice so that all responses to the requests 
+        are directed back to the spoofed IP of the targeted webpage. 
+- AWS has products and services to help combat DDOS attacks.
+
+#### Secure Sockets Layer (SSL) and Transport Layer Security (TLS)
+- SSL and TLS provide Privacy and Data Integrity between client and server
+- Privacy - communications are encrypted
+    - asymmetric then symmetric
+- Identity (server or client/server) verified
+    - e.g. Netflix.com proving that it is indeed actually Netflix
+- Reliable connection - protection against alteration
+- See screenshot of process 
+[insert screenshot here for SSL and TLS]
+
+TLS 
+1. Cipher Suites - set of protocols used by TLS 
+    - e.g key exchange algorithm, bulk encryption algorithm, and message authentication code (MAC) algorithm
+     
