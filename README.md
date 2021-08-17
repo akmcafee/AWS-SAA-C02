@@ -407,3 +407,96 @@ inside an AWS private network must explicitly be made available to the AWS Publi
 to it from the public internet.  
 [insert screenshot here]
 
+#### AWS Global Infrastructure
+- https://infrastructure.aws has a 3D model of regions and edge locations
+- Geographic Separation - separated Fault Domain
+- Geopolitical Separation - Different Governance
+- Location Control - Performance
+
+Regions and AZs
+- Region codes and Region names
+    - Region code: ap-southeast-2
+    - Region name: Asia Pacific (Sydney)
+    - Availability Zones: ap-southeast-2a, ap-southeast-2b, ap-southeast-2c
+        - Isolated infrastructure inside a region (compute, storage, networking, power, and facilities)
+        - Could be made up of one or more data centers
+        - Connected together with high speed, resilient networking
+        - Services can be spread across AZs, e.g. your VPC
+- Service Resilience
+    - Globally Resilient
+        - e.g. IAM, Route 53. You never select a region for these services because they exist globally. 
+        - Several regions, if not all regions, would need to fail to impact availability of global services.
+    - Regionally Resilient
+        - Services that operate in a single region with one set of data per region. 
+        - e.g. RDS databases in different regions would be different
+        - An entire region would need to fail to impact availability of regional services.
+        - Regional services generally replicate data between it's AZs.
+    - AZ Resilient
+        - Even though there is some resiliency built into the components making up an AZ, AZ services are very prone to 
+        failure if there are problems inside the AZ.
+        
+#### AWS Default Virtual Private Cloud (VPC)
+- VPC Basics
+    - VPC - virtual network inside AWS
+    - Exists within 1 AWS account and within 1 region
+    - Private and isolated unless you decide otherwise
+    - 2 types: Default VPC and Custom VPC
+        - You can only have 1 default VPC per region!
+    - VPCs are regionally resilient
+        - VPC CIDR of the default VPC is always 172.31.0.0/16
+        - Subnets can be created inside a VPC for network segregation.
+        - The default VPC is pretty inflexible. It can be remove and recreated, if necessary.
+        - /20 subnet is created in each AZ in the region
+            - plenty of network space
+        - Included are an Internet Gateway (IGW), Security Group (SG) and Network Access Control List (NACL)
+        - Subnets assign public IPv4 addresses
+    - DEMO at 11:30
+        - Recreating the default VPC is under the Action drop down menu, not "Create VPC". 
+        - "Create VPC" button only creates custom VPCs
+
+#### Elastic Compute Cloud (EC2) Basics
+EC2 Key Facts and Features
+- Provides access to virtual machines, known as "Instances"
+- IAAS (Infrastructure as a Service) - Provides virtual machines => Instances
+    - The Instance is the unit of consumption
+    - An Instance is just an OS configured with a certain set of resources
+    - Since EC2 is IaaS, you control the OS and up while AWS controls everything from the virtualization of the VM, the 
+    hardware it's running on, and everything else required down to the needs of the building the server is located. 
+- Private service by-default which means it uses VPC networking
+    - If you want your EC2 instance to have public access, your VPC needs to support that access. 
+- AZ resilient - meaning, if the AZ fails, the instance fails      
+- On-Demand billing - per second
+- Local on-host storage and Elastic Block Store (EBS)
+
+Instance Lifecycle
+- 3 states: Running, Stopped, Terminated
+    - you can switch from Running to Stopped and back again without problem. 
+    - Terminating an instance is a permanent, one way change. 
+    - Running instances are billed per second for all components of the instance, e.g. CPU, RAM, DISK, and NETWORK
+        - Changing an instance to the Stopped state when not needed saves you money on CPU, RAM, and NETWORK but the storage
+        allocated to the instance is still being held. *Stopped instances still incur storage charges!*
+        
+Amazon Machine Image (AMI)
+- Image of an EC2 instance
+- AMI can be use to create, or be created from, an EC2 instance.
+- Similar to a USB used to install an OS, or perhaps a VM template used to launch a preconfigured version of a new VM
+- AMI contains:
+    - permissions - controls which accounts have access to the AMI
+        - can be set to Public - everyone allowed. This is how the Windows and Linux images that AWS provides, are set to. 
+        - Owner is implicitly allowed to create EC2 instances from the AMI
+        - Owner explicitly allows specific AWS accounts access
+    - Root volume - the drive that boots the OS. e.g. C:\ in Windows or Root volume in Linux
+    - Block Device Mapping - configuration that links the volumes of the AMI to the device ID when presenting to the OS
+
+Connecting to EC2
+- EC2 instances can run various linux distros or Windows
+    - use RDP:3389 to remote into Windows instances
+        - When connecting to Windows, a private key is created and stays on the client device. The public key goes to the 
+        EC2 instance. The private key is used to reach the EC2 instance but access is granted using the Windows local admin 
+        password. The private key should be safe backed up and secured. 
+    - use SSH:22 to connect to Linux instances 
+        - When connecting to Linux instances, the private and public key are used to establish the SSH connection.
+
+#### DEMO - My First EC2 Instance
+- A Security Group can be applied to many network interfaces on many EC2 instances. It doesn't have to be 1 per instance
+or network interface. 
