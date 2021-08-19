@@ -500,3 +500,55 @@ Connecting to EC2
 #### DEMO - My First EC2 Instance
 - A Security Group can be applied to many network interfaces on many EC2 instances. It doesn't have to be 1 per instance
 or network interface. 
+
+#### Simple Storage Service (S3) Basics
+- Global storage platform - Region based / resilient
+    - Can withstand failure of an AZ
+- Public service, unlimited data and multi-user
+- Good for movies, audio, photos, text, and large data sets
+- Economical and accessible via the UI, CLI, API, and HTTP
+- Delivers objects and buckets
+    - buckets are containers for objects
+    
+S3 Objects
+- An object in S3 is made up of 2 main components, and some associated metadata. 
+    - **Object Key** is similar to a filename. 
+        - So if you have the object key and bucket, assuming you have the proper permissions, you can access the object.
+    - **Object Value** is the content, or data, being stored. 
+        - **Object size can range from 0 bytes to 5 TB**
+    - Other attributes of an S3 object
+        - Version ID, Metadata, Access Control, Subresources
+
+S3 Buckets
+- Buckets have primary home regions, and never leave that region, unless you configure it to leave the region. 
+    - By keeping a bucket in a region, you can control the laws and rules that apply to that data. 
+    - Blast radius is the region. If a major failure occurs (natural disaster or data corruption), the effects will be 
+    contained within the region. 
+    - **Bucket names must be globally unique.**
+        - 3-63 characters, all lower case, no underscores, start with lowercase letter or number, can't be formatted like 
+        an IP address (e.g. 1.1.1.1)
+    - Buckets can hold an unlimited number of objects.   
+    - Bucket structure is flat. All objects are stored at the same level. There is no nesting. 
+        - There are no **real** folders in S3. S3 will present objects as being contained in folders when the object name 
+        includes a prefix, e.g. /old/koala1.jpg, but in reality, no folder actually exists. 
+    - Bucket limits per account: 
+        - **100 soft limit** 
+        - **1000 hard limit** - making limit increase requests through support along the way 
+    
+S3 Patterns and Anti-patterns
+- S3 is an **object** store, not *file* or *block*
+    - Not good for Windows server using S3 as a network file storage location. That should be  *file* storage.
+    - You can't mount an S3 bucket. e.g. K:/ or /images
+    - Great for large scale data storage, distribution, or upload
+    - Great for offloading as it's cheaper to get old content off storage of more expensive server instances. e.g. old 
+    blog posts from your website and point your users to the S3 bucket for that content.
+    - Should be your default storage location for INPUT and/or OUTPUT to MANY AWS services. 
+    
+#### DEMO - My First S3 Bucket
+- Untick checkbox for "Block *all* public access" only means that you're removing the safety mechaism that allows you to 
+take further steps to make objects in your bucket publicly accessible. 
+- Amazon Resource Name (ARN)
+    - Every resource in AWS has a unique ARN. 
+    - Format is always the same: arn:PARTITION:SERVICE NAME:SERVICES:SERVICES:RESOURCE NAME
+- Clicking the link under Object URL attempts to view the object as an unauthenticated user which is blocked by default. 
+To view the object with your own AWS permissions, select Open from the Object Actions menu. 
