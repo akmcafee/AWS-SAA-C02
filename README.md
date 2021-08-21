@@ -552,3 +552,20 @@ take further steps to make objects in your bucket publicly accessible.
     - Format is always the same: arn:PARTITION:SERVICE NAME:SERVICES:SERVICES:RESOURCE NAME
 - Clicking the link under Object URL attempts to view the object as an unauthenticated user which is blocked by default. 
 To view the object with your own AWS permissions, select Open from the Object Actions menu. 
+
+#### CloudFormation (CFN) Basics
+- Uses templates to create, update, and delete AWS infrastructure in a consistent and repeatable way.
+    - Templates are in JSON or YAML. Both do the same thing. Both have their own pros and cons. 
+- Resources section of the  template is the only *mandatory* part of a template. 
+- If you use "AWSTemplateFormatVersion" and "Description", the Description must immediately follow the Template Format Version. 
+- "Metadata" is a way to force how the AWS Console UI presents the template. 
+- "Parameters" contains fields that prompt the user for more information. 
+- "Mappings" is optional but allows you to create lookup tables. 
+- "Conditions" allow decision making in the template. 
+- "Outputs" can be presented based on what's being created, updated, or deleted. 
+    - e.g. Returning the Instance ID of something that's been created. 
+    
+- "Resources" inside a CloudFormation template are called "Logical Resources".
+- A "stack" is a living representation of a template. It's created from all the "Instances" inside a template. 
+- For every Logical Resource in a Stack, AWS makes a corresponding physical resource in your AWS account.
+    - This is the *whole point* of CloudFormation. 
