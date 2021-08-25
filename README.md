@@ -569,3 +569,37 @@ To view the object with your own AWS permissions, select Open from the Object Ac
 - A "stack" is a living representation of a template. It's created from all the "Instances" inside a template. 
 - For every Logical Resource in a Stack, AWS makes a corresponding physical resource in your AWS account.
     - This is the *whole point* of CloudFormation. 
+    
+#### DEMO - Simple Automation with CFN
+- Create a stack and EC2 instance from a YAML template.
+- Connect to the EC2 instance using Session Manager. 
+    - Session Manager role was already active because it was included in the YAML template.
+    - You can type "bash" at the prompt once connected in Session Manager.  
+- Monitor progress of the stack creation and deletion from CloudFormation.
+
+#### CloudWatch (CW) Basics
+- Collects and manages operational data, e.g. how the resource it's running, performing, or logging data
+- 3 main jobs:
+    1. Metrics - AWS products, apps, on-premise collection of metrics, monitoring of metrics, and actions of metrics. 
+    e.g. cpu utilization, disk space consumption, etc.
+        - some metrics require the CloudWatch agent e.g. metrics outside AWS, processes running inside an EC2 instance
+    2. CloudWatch Logs - AWS products, app, on-premise
+    3. CloudWatch Events - AWS Services and Schedules
+- Namespace - like a container for monitoring data. Keeps data organized.
+    - required to have a name but AWS/[service] is reserved. e.g. AWS/EC2 is reserved for EC2 data.
+- Metric - Time Ordered set of data points. e.g. cpu utilization, network in/out, disk IO, etc. 
+- Datapoint - unit of data inside a Metric. 
+    - For example, several EC2 instances report their cpu usage to the same CPU Usage metric. Inside that metric are many 
+    datapoints of cpu usage data from each of the instances. 
+    - Datapoints consist of 2 things: Timestamps and Values. 
+        - Timestamps contain the exact date and time of the value when the datapoint was created.
+        - Value contains the measurement being taken. e.g. % of CPU used. 
+    - Dimensions are how we determine which instance the datapoint came from or is referring to. They separate datapoints 
+    for different perspectives within the same metric.
+        - InstanceID and InstanceType are also included. 
+- Alarms - takes an action based on a metric. Tied to a specific metric. 
+
+#### DEMO - Simple Monitoring with CloudWatch
+- Created a CPU usage alarm and test the alarm state change using "stress" application on the EC2 instance.
+
+####  Shared Responsibility Model
