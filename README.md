@@ -603,3 +603,33 @@ To view the object with your own AWS permissions, select Open from the Object Ac
 - Created a CPU usage alarm and test the alarm state change using "stress" application on the EC2 instance.
 
 ####  Shared Responsibility Model
+[Insert screenshot here]
+- Keep shared responsibility model in mind through the remainder of the course.
+- Good info to understand at the beginning of learning AWS.
+
+#### High-Availability vs Fault Tolerance vs Disaster Recovery
+High-Availability (HA)
+- Minimize any outages
+- aims to ensure an agreed level of operational performance, usually uptime, for a higher than normal period.
+- HA is not about user experience or preventing user disruption. It's not a guarantee that customers won't experience outages. **It's about maximizing a 
+system's uptime.** HA is about keeping a system operational. It's about fast, or automatic, recovery of issues. 
+- 99.9% (Three 9's) = 8.77 hours/year 
+- 99.999%(Five 9's) = 5.26 minutes/year
+- e.g. 4 wheel drive on a vehicle traveling through muddy terrain provides HA
+
+Fault Tolerance (FT)
+- Operate through faults
+- the property that enables a system to continue operating properly in the event of the failure of some (one or more faults 
+within) of it components. 
+- e.g. airplanes must continue operating through system failure so they're built with more engines than they need and duplicate
+systems. 
+- FT is more difficult to design, implement and costs much more. 
+
+Disaster Recovery (DR)
+- Used when HA and FT don't work.
+- a set of policies, tools, and procedures to enable the recovery or continuation of vital technology infrastructure and
+systems following a natural or human-induced disaster. 
+- DR is designed to keep the crucial and non-replaceable parts of your system safe so that when a disaster occurs, you don't 
+lose anything irreplaceable and can rebuild after the disaster. 
+- e.g. pilot or passenger ejection systems
+- DR was previously a very manual process but the Cloud and automation has reduced recovery time and potential for errors. 
