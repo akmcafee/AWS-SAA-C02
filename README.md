@@ -2,9 +2,11 @@
 
 My notes while studying for the AWS SAA-C02 exam using the course at <https://learn.cantrill.io> by Adrian Cantrill.
 
-**The official AWS certification site:** <https://aws.amazon.com/certification/certified-solutions-architect-associate/>
+**The official AWS certification site:** 
+<https://aws.amazon.com/certification/certified-solutions-architect-associate/>
 
-**The official AWS SAA-C02 Exam Guide:** <https://d1.awsstatic.com/training-and-certification/docs-sa-assoc/AWS-Certified-Solutions-Architect-Associate_Exam-Guide.pdf>
+**The official AWS SAA-C02 Exam Guide:** 
+<https://d1.awsstatic.com/training-and-certification/docs-sa-assoc/AWS-Certified-Solutions-Architect-Associate_Exam-Guide.pdf>
 
 ## Course Fundamentals and AWS Accounts
 - Root accounts have full control and can access billing details.
@@ -365,7 +367,8 @@ IP Subnetting
 - /## is called the prefix. e.g. 10.16.0.0/16
 - Classless Inter-Domain Routing (CIDR) is what allows us to take networks and break them down.
 - 10.16.0.0/8 would be a bigger network. The smaller the prefix, the larger the network space.
-- Breaking 1 subnet into two smaller subnets is typical. Using odd numbers is not as common but will provide you with 3 smaller subnets.
+- Breaking 1 subnet into two smaller subnets is typical. Using odd numbers is not as common but will provide you with 3 
+smaller subnets.
 
 #### Network Starter Pack - Distributed Denial of Service (DDOS)
 - Attacks designed to overload a service
@@ -611,8 +614,9 @@ To view the object with your own AWS permissions, select Open from the Object Ac
 High-Availability (HA)
 - Minimize any outages
 - aims to ensure an agreed level of operational performance, usually uptime, for a higher than normal period.
-- HA is not about user experience or preventing user disruption. It's not a guarantee that customers won't experience outages. **It's about maximizing a 
-system's uptime.** HA is about keeping a system operational. It's about fast, or automatic, recovery of issues. 
+- HA is not about user experience or preventing user disruption. It's not a guarantee that customers won't experience outages.
+ **It's about maximizing a system's uptime.** HA is about keeping a system operational. It's about fast, or automatic, 
+ recovery of issues. 
 - 99.9% (Three 9's) = 8.77 hours/year 
 - 99.999%(Five 9's) = 5.26 minutes/year
 - e.g. 4 wheel drive on a vehicle traveling through muddy terrain provides HA
@@ -632,4 +636,123 @@ systems following a natural or human-induced disaster.
 - DR is designed to keep the crucial and non-replaceable parts of your system safe so that when a disaster occurs, you don't 
 lose anything irreplaceable and can rebuild after the disaster. 
 - e.g. pilot or passenger ejection systems
-- DR was previously a very manual process but the Cloud and automation has reduced recovery time and potential for errors. 
+- DR was previously a very manual process but the Cloud and automation has reduced recovery time and potential for errors.
+
+#### Domain Name System (DNS) Fundamentals - Part 1
+- DNS is a discovery service
+- Translates machine into human and vice-versa
+- It's huge and has to be distributed
+- The root of a domain is the invisible "." that comes after the TLD. e.g. .com., .org., .co.uk., etc.  
+- Zone file for a website exists in one place on the internet and has within it a DNS record that points the public IP of 
+the server hosting the website. The DNS records is hosted on a DNS Nameserver (NS).
+- DNS Client: your laptop, phone, tablet, PC
+- Resolver: software on your device, or a server which queries DNS on your behalf
+- Zone: part of the DNS database (e.g. amazon.com, netflix.com)
+- Zonefile: physical database for a zone
+- Nameserver: where zonefiles are hosted
+- DNS Root Servers (13 of them) are operated by 12 different large global companies or organizations manage the root zone 
+servers but not the database.
+    - list of root servers can be found on iana.org
+        - Verisign manages 2 of the servers
+    - each manager is assigned a letter, A-M  
+    - each server name is actually a pool of servers
+    - These root servers are the entry point. Understand how your laptop finds these root servers. *It's the root hints file 
+    provided by your computer's O.S.!*
+- Your laptop generally will use a DNS resolver server typically from your internet router or your ISP. The resolver for 
+a Windows device might be Microsoft or for Linux it might your OS' maintaining group. They supply the root hints, or root 
+hints file. The root hints file is essentially just a list of the root servers. The contents of the root zone are managed
+ by IANA, essentially placing them in charge of the global DNS system. DNS is built on trust.  
+- IANA (Internet Assigned Numbers Authority) : https://www.iana.org
+  
+  Root hints : https://www.internic.net/domain/named.root
+  
+  Root Servers : https://www.iana.org/domains/root/servers
+  
+  Root Zone Database : https://www.iana.org/domains/root/db
+  
+  Root Zone File : https://www.internic.net/domain/root.zone
+  
+  Delegation Record for .com : https://www.iana.org/domains/root/db/com.html 
+  
+  #### Domain Name System (DNS) Fundamentals - Part 2
+  DNS Hierarchy
+  - "authority" or "authoritative" indicates Trust
+  - the Root Zone can delegate part of itself to another entity, or another zone. That someone else becomes *authoritative* 
+  just for that part that's been delegated. 
+  
+  DNS Flow - client to server
+  1. A client makes a dns request asking for a specific URL, e.g. amazon.com
+  2. The root zone database looks at the .com and points the request to Verisign's nameserver because Verisign is responsible 
+  for the .com TLD. The .com zone is now authoritative because it's been delegated by the Root Zone.
+  3. The amazon zone, for amazon.com, in the .com TLD nameserver has a DNS record pointing to the amazon.com zone that is 
+  managed by Amazon, the organization that owns the amazon.com domain name. This amazon.com zone is trust by the .com zone 
+  which is trusted by the Root Zone. It contains a DNS record for www. which maps to an IP address 104.98.34.131, which is 
+  what your client needs to communicate with the www.amazon.com server.
+  
+  DNS Resolution
+  "Walking the tree" [insert screenshot] 
+  It's called a recursive resolver because it handles the process for you. 
+  
+  Remember these!
+  - Root hints - config points at the root server's IPs and addresses
+  - Root Server - hosts the DNS root zone
+  - Root Zone - points at the TLD authoritative servers
+  - gTLD - generic top level domain (.com, .org)
+  - ccTLD - country-code top level domain (.uk, .eu, etc.)
+  
+  #### Route53 (R53) Fundamentals
+  1. Registers domains 
+  2. Hosts zones .. managed nameservers 
+  - Global service ... single database. Don't need to pick a region in the UI. 
+  - Global resilience
+  
+  Hosted Zones
+  - zone files in AWS
+  - hosted on 4 managed nameservers 
+  - can be public
+  - or private .. linked to VPC(s)
+  - stores records (recordsets)
+  
+  #### DEMO - Registering a domain
+  - PIR controls getting your newly registered domain updated on the TLD database
+  
+  
+ #### DNS Record Types
+ Nameservers (NS) provide the route to each zone along the way until the proper info is collected to send back to the 
+ requesting client.
+ 
+ A and AAAA Records
+ - these records map host names to IP addresses
+    - A records map to an IPv4 address
+    - AAAA records map to an IPv6 address
+    - Create each when building so the requesting client can decide which one it wants to use, IPv6 if capable.
+    
+CNAME Records
+- Host to Host records
+- CNAME records **can not** point to an IP address, only host names
+
+MX Records 
+- MX records are how a server can find the mail server (SMTP) for a specific domain.
+- MX records have 2 main parts: Priority and Value
+- Values: 
+    - MX 10 mail (host)
+        - because it doesn't have a trailing ".", it's assumed to be a part of the same zone it's in.
+    - MX 20 mail.other.domain.  
+        - the trailing "." means it's a fully qualified domain name (FQDN)
+- Priority: 
+    - the lower value is tried first. If it doesn't work, move on to the next highest value and try again. 
+    - if both records have the same value, e.g. both have 10, either can be used.
+    
+TXT Records
+- allow you to add arbitrary text to a domain
+    - one common use is to prove domain ownership
+    
+TTL - Time to Live
+- numeric value, in seconds, that can be set on DNS records
+- responses provided by the domain zone, e.g. amazon.com zone, are authoritative. They are accepted, and cached by the 
+resolver servers. Responses provided by resolver servers are non-authoritative.
+- TTL can be set low but this increases the number of requests on your DNS servers. If you change the values of records 
+in your domain zone, delays may occur for requests getting responses from resolver servers who have not yet checked back 
+with the domain zone servers because the previous TTL has not yet expired. 
+    - When making planned changes to DNS records, seriously consider lowering the TTL values of those records days or weeks 
+    ahead of time to reduce caching issues when you finally change the records. 
