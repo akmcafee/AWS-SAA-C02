@@ -755,4 +755,46 @@ resolver servers. Responses provided by resolver servers are non-authoritative.
 in your domain zone, delays may occur for requests getting responses from resolver servers who have not yet checked back 
 with the domain zone servers because the previous TTL has not yet expired. 
     - When making planned changes to DNS records, seriously consider lowering the TTL values of those records days or weeks 
-    ahead of time to reduce caching issues when you finally change the records. 
+    ahead of time to reduce caching issues when you finally change the records.
+    
+## IAM, Accounts, and AWS Organizations
+#### IAM Identity Policies
+Exam will require you to understand the architecture of identity policies and how to read them but not how to write them.
+
+IAM policy - set of security statements to AWS that grant or deny access to AWS products and features to any identity 
+which uses that policy.
+
+Policy documents are created using JSON. They contain "statements" that contain the policy info AWS uses to determine access
+rights. 
+- SID = statement ID, allows you to identify a statement and what the statement does.
+    - e.g. "FullAccess", or "DenyCatBucket"
+    - always use statement IDs
+    - a statement only applies if it matches the Action and the Resource
+- Action 
+    - matches one or more actions
+    - can be very specific or use wildcards to include everything
+        - e.g. "Action": ["s3:*"]
+- Resource
+    - use the Amazon Resource Name (ARN) if limiting the statement to a specific resource.
+- Effect
+    - allow or deny
+
+It is possible to be allowed and denied to a specific resource, at the same time. You may have full access to any S3 actions
+on any resource but are denied access to one specific bucket. 
+- This is managed by tiers of access, process in the following order: 
+    1. Explicit DENY - blocks access regardless of other stated allowed permissions. Explicit deny always takes priority.
+    2. Explicit ALLOW - 
+    3. Default DENY (implicit) - all identities start with no access.
+
+DENY, ALLOW, DENY... DENY, ALLOW, DENY... DENY, ALLOW, DENY... DENY, ALLOW, DENY... DENY, ALLOW, DENY... DENY, ALLOW, DENY... 
+
+Inline policies - allowing unique policies to each individual IAM account. This becomes individual isolated bits of JSON. 
+It works but not best practice. Making changes later would need to be done for each and every JSON policy.
+- Use these for special exceptions to ensure a specific set of rights for an identity. 
+
+Managed policies - created as their own object. 
+- They are reusable, so you can use the same JSON based policy for 3 people or 300 people. They should be used for 
+    the normal, default, operational rights in your business.
+- They have low management overhead. Changes to the JSON immediately impacts all the identities it's attached to.
+    1. AWS managed policies - created and managed by AWS. Might not fit your exact needs. 
+    2. Customer managed policies - created and managed by you so you can write them to your own requirements.
