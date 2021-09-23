@@ -764,7 +764,7 @@ Exam will require you to understand the architecture of identity policies and ho
 IAM policy - set of security statements to AWS that grant or deny access to AWS products and features to any identity 
 which uses that policy.
 
-Policy documents are created using JSON. They contain "statements" that contain the policy info AWS uses to determine access
+Policy documents are created using JSON. They contain *a list of "statements"* that contain the policy info AWS uses to determine access
 rights. 
 - SID = statement ID, allows you to identify a statement and what the statement does.
     - e.g. "FullAccess", or "DenyCatBucket"
@@ -798,3 +798,32 @@ Managed policies - created as their own object.
 - They have low management overhead. Changes to the JSON immediately impacts all the identities it's attached to.
     1. AWS managed policies - created and managed by AWS. Might not fit your exact needs. 
     2. Customer managed policies - created and managed by you so you can write them to your own requirements.
+    
+#### IAM Users and ARNs
+IAM Users are an identity used for anything requiring long-term AWS access, e.g humans, applications, or service accounts.
+- IAM access authentication, by a principal, is done using either Username and Password or Access Keys. (long term credentials)
+- Successful authentication creates an "authenticated identity". They have proven who they are. 
+
+Amazon Resource Name (ARN)
+- Uniquely identifies resources in any AWS accounts.
+- Colons can be back-to-back when the resource is globally unique and so the region and account-id are not required.
+- Asterisk is a wildcard. It can be used instead of the word "all", e.g. referencing an EC2 instance in all regions.
+- Partition field is almost always "aws". For China, it's "aws-cn".
+- Service field identifies the AWS product, e.g. S3, IAM, or RDS
+- Region field is the region the resource resides in. Some ARN don't require a region and some require a wildcard. 
+- Account-ID is the account that owns the resource. 
+- Resource-ID or Resource-type varies depending on the service.
+
+IAM Users
+- **5,000 IAM Users per account limit**, not per region.  
+- IAM User can be a member of 10 IAM Groups 
+ - This has system design impacts.
+ - Internet scale applications.
+ - Large orgs or orgs merging.
+ - IAM Roles and Identity Federation are potential fixes for this limitation.
+ 
+ #### Simple Identity Permissions is AWS - DEMO
+ - An IAM User has zero permissions when they are first created. They generally have a managed policy assigned to them 
+ that allows them to change their password but that's about it. 
+ - When adding policies to an IAM user, you can use the wizard to create the policy or copy and paste the policy in JSON
+ format. 
