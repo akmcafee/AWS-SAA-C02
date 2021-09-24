@@ -822,8 +822,22 @@ IAM Users
  - Large orgs or orgs merging.
  - IAM Roles and Identity Federation are potential fixes for this limitation.
  
- #### Simple Identity Permissions is AWS - DEMO
+ #### DEMO - Simple Identity Permissions is AWS
  - An IAM User has zero permissions when they are first created. They generally have a managed policy assigned to them 
  that allows them to change their password but that's about it. 
  - When adding policies to an IAM user, you can use the wizard to create the policy or copy and paste the policy in JSON
  format. 
+ 
+ #### IAM Groups
+ - IAM Groups are containers for Users. You can not log in to AWS as an IAM Group. Groups have no credentials of their own.
+ - *There is no built-in ALL USERS group*. Common trick question. You could create and manage a single group in an account
+ that has all 5,000 allowed users. It's just not already there by default. 
+ - Nesting groups is not possible. 
+ - There's a limit of 300 groups per account but this can be increased with a support ticket to AWS.
+ - Resource policies control access to a resource and can reference IAM identities and IAM roles using an ARN.
+ - Groups are not a true identity. They can't be referenced as a principal in a policy by a resource policy.
+ 
+ #### DEMO - Permissions Control Using IAM Groups
+ n/a 
+ 
+ 
